@@ -24,22 +24,27 @@ public class QuickSort {
         if (n <= 1){
             return;
         }
-        Internal(target,0,n-1);
+        Internal1(target,0,n-1);
     }
 
     /***
      * 快排递归
-     * @param array 待排序的数组
+     * @param target 待排序的数组
      * @param low 数组起始位置
-     * @param hight 数组终止位置
+     * @param high 数组终止位置
      */
-    private static void Internal(int[] array,int low,int hight){
-        if (low >= hight){
+    private static void Internal1(int[] target,int low,int high){
+        //优化：当元素个数比较小时，调用直接插入排序
+        if (high - low <= 16){
+            InsertSort.insertSort(target);
             return;
         }
-        int index = patition3(array,low,hight);
-        Internal(array,low,index-1);
-        Internal(array,index+1,hight);
+        /*if (low >= high){
+            return;
+        }*/
+        int index = patition2(target,low,high);
+        Internal1(target,low,index-1);
+        Internal1(target,index+1,high);
     }
 
     /***
@@ -62,7 +67,7 @@ public class QuickSort {
                 j++;
             }
         }
-        //当for循环走完只需要将array[l]位置与array[j]位置交换即可保证索引小于j的元素均小于v，索引大于j的元素均大于j
+        //当for循环走完只需要将target[l]位置与target[j]位置交换即可保证索引小于j的元素均小于v，索引大于j的元素均大于j
         swap(target,low,j);
         return j;
     }
@@ -123,20 +128,58 @@ public class QuickSort {
         return j;
     }
 
+    //优化3：
+    //三路快排
+    //将数组分成了小于v，等于v，大于v的三个部分
+    //在递归处理的时候，遇到等于v的元素直接不用管，只需要处理小于v，大于v的元素
+    private static void Internal2(int[] target,int low,int high){
+        //优化：当元素个数比较小时，调用直接插入排序
+        if (high - low <= 16){
+            InsertSort.insertSort(target);
+            return;
+        }
+        int randomIndex = (int) (Math.random()*(high - low + 1) + low);
+        swap(target,low,randomIndex);
+        int v = target[low];
+        // arr[low+1...lt] < v
+        int lt = low;
+        // arr[lt+1...i-1] == v
+        int i = low + 1;
+        // arr[gt...r] > v
+        int gt = high + 1;
+        while(i < gt){
+            if(target[i] < v){
+                swap(target,i,lt+1);
+                lt++;
+                i++;
+            }else if(target[i] > v){
+                swap(target,i,gt-1);
+                gt--;
+            }else {
+                i++;
+            }
+        }
+        //循环走完只需要将low位置的元素与lt交换即为分区点
+        swap(target,low,lt);
+        //递归时将相同元素隔离
+        Internal2(target,low,lt-1);
+        Internal2(target,gt,high);
+    }
+
     /***
      * 交换数组中的两个元素的位置
-     * @param array 目标数组
+     * @param target 目标数组
      * @param indexA 元素A下标
      * @param indexB 元素B下标
      */
-    private static void swap(int[] array,int indexA,int indexB){
-        int temp = array[indexA];
-        array[indexA] = array[indexB];
-        array[indexB] = temp;
+    private static void swap(int[] target,int indexA,int indexB){
+        int temp = target[indexA];
+        target[indexA] = target[indexB];
+        target[indexB] = temp;
     }
     //测试
     public static void main(String[] args) {
-        int[] test = new int[]{5,5,5,5,4};
+        int[] test = new int[]{5,4,3,2,1};
         quickSort(test);
         Tool.print(test);// [1 2 3 4 5]
     }
