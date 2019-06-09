@@ -345,12 +345,12 @@ public class BinSearchTree<E extends Comparable> implements My_BinTree<E> {
             return null;
         }
         // 要删除的节点在左子树
-        else if(e.compareTo(node.data) < 0){
+        if(e.compareTo(node.data) < 0){
             node.left = removeNode(node.left,e);
             return node;
         }
         // 要删除的节点在右子树
-        else if(e.compareTo(node.data) > 0){
+        if(e.compareTo(node.data) > 0){
             node.right = removeNode(node.right,e);
             return node;
         }
@@ -371,16 +371,16 @@ public class BinSearchTree<E extends Comparable> implements My_BinTree<E> {
                 return leftTree;
             }
             // 要删除的节点左右子树均有值，找到后继或前驱节点
-            else{
+
                 // 找到右子树的最小值节点作为后继节点
                 Node successor = getMinNode(node.right);
-                // 删除右子树的最小节点，链到后继节点的右子树
+                // 删除右子树的最小节点，链到后继节点的右子树(必须先左后右)
                 successor.right = removeMinNode(node.right);
                 // 将原左子树链到后继节点左子树
                 successor.left = node.left;
                 node.left = node.right = null;
                 return successor;
-            }
+
         }
     }
 

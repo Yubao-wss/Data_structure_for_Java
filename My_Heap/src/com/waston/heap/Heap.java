@@ -1,4 +1,4 @@
-package com.waston.heap;
+package src.com.waston.heap;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -28,6 +28,23 @@ public class Heap<E extends Comparable<E>> {
 
     public Heap(int initialCapacity){
         this(initialCapacity,null);
+    }
+
+    /**
+     * 由任意数组构建堆 (Heapify)
+     * @param arr
+     */
+    public Heap(E[] arr){
+        elementData = (E[]) new Object[arr.length];
+        for(int i = 0;i < arr.length;i++){
+            elementData[i] = arr[i];
+        }
+        size = elementData.length;
+        // Heapify
+        // 从最后一个非叶子节点开始siftDown
+        for(int i = (arr.length - 1 - 1) / 2;i >= 0;i--){
+            siftDown(i);
+        }
     }
 
     public int getSize(){
@@ -119,6 +136,8 @@ public class Heap<E extends Comparable<E>> {
         }
     }
 
+
+
     /**
      * 交换
      * @param indexA
@@ -185,6 +204,11 @@ public class Heap<E extends Comparable<E>> {
             throw new IllegalArgumentException("没有父节点");
         }
         return (index - 1)/2;
+    }
+
+    public static void main(String[] args) {
+        String[] ints = new String[0];
+        Heap<String> heap = new Heap<>(ints);
     }
 }
 
