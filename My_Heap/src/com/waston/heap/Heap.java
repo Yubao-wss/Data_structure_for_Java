@@ -9,6 +9,13 @@ import java.util.Comparator;
  * @Author: Waston
  * @Date: 2019/6/6 19:52
  */
+class A implements Comparable<A> {
+
+    @Override
+    public int compareTo(A o) {
+        return 0;
+    }
+}
 public class Heap<E extends Comparable<E>> {
     // 默认初始容量
     private static final int DEFAULT_CAPACITY = 10;
@@ -207,8 +214,8 @@ public class Heap<E extends Comparable<E>> {
     }
 
     public static void main(String[] args) {
-        String[] ints = new String[0];
-        Heap<String> heap = new Heap<>(ints);
+       Object o = new Object();
+       Comparable c = (Comparable)o;
     }
 }
 
